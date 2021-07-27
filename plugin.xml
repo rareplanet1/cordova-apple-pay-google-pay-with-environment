@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-apple-pay-google-pay-with-environment"
+		version="1.0.0"
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns="http://apache.org/cordova/ns/plugins/1.0">
+	<name>ApplePayGooglePay</name>
+	<js-module name="ApplePayGooglePay"
+			   src="www/ApplePayGooglePay.js">
+		<clobbers target="cordova.plugins.ApplePayGooglePay" />
+	</js-module>
+	<platform name="ios">
+		<config-file parent="/*"
+					 target="config.xml">
+			<feature name="ApplePayGooglePay">
+				<param name="ios-package"
+					   value="ApplePayGooglePay" />
+			</feature>
+		</config-file>
+		<source-file src="src/ios/ApplePayGooglePay.swift"/>
+	</platform>
+	<platform name="android">
+		<config-file target="res/xml/config.xml" parent="/*">
+			<feature name="ApplePayGooglePay">
+				<param name="android-package" value="com.plugin.googlepay.ApplePayGooglePay"/>
+			</feature>
+		</config-file>
+		<source-file src="src/android/ApplePayGooglePay.java" target-dir="src/com/plugin/googlepay" />
+		<framework src="src/android/build.gradle" custom="true" type="gradleReference" />
+	</platform>
+</plugin>
