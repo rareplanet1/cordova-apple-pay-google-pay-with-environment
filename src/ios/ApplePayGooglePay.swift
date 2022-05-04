@@ -37,7 +37,7 @@ import PassKit
             
             let request = PKPaymentRequest()
             request.merchantIdentifier = merchantId
-            request.supportedNetworks = [.visa, .masterCard, .amex, .chinaUnionPay]
+            request.supportedNetworks = [.visa, .masterCard ]
             request.merchantCapabilities = .capability3DS
             request.countryCode = countryCode
             request.currencyCode = currencyCode
