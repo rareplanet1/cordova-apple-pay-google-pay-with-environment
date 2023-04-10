@@ -139,25 +139,25 @@ public class ApplePayGooglePay extends CordovaPlugin {
             String gpMerchantId = getParam(argss, "gpMerchantId");
             String gpMerchantName = getParam(argss, "gpMerchantName");
 
-                        String par1 = "";
+            String par1 = "";
             String par2 = "";
             String par3 = "";
 
 
             switch (gateway) {
                 case "stripe":
-                par1 = getParam(argss, "stripe:version");
-                par2 = getParam(argss, "stripe:publishableKey");
+                par1 = getParam(argss, "version");
+                par2 = getParam(argss, "publishableKey");
                 break;
                 case "braintree":
-                par1 = getParam(argss, "braintree:apiVersion");
-                par2 = getParam(argss, "braintree:sdkVersion");
-                par3 = getParam(argss, "braintree:clientKey");
+                par1 = getParam(argss, "apiVersion");
+                par2 = getParam(argss, "sdkVersion");
+                par3 = getParam(argss, "clientKey");
                 break;
                 case "vantiv":
-                par1 = getParam(argss, "vantiv:merchantPayPageId");
-                par2 = getParam(argss, "vantiv:merchantOrderId");
-                par3 = getParam(argss, "vantiv:merchantTransactionId");
+                par1 = getParam(argss, "merchantPayPageId");
+                par2 = getParam(argss, "merchantOrderId");
+                par3 = getParam(argss, "merchantTransactionId");
                 break;
             }
 
@@ -202,7 +202,7 @@ public class ApplePayGooglePay extends CordovaPlugin {
      * @see <a href=
      * "https://developers.google.com/pay/api/android/reference/object#PaymentMethodTokenizationSpecification">PaymentMethodTokenizationSpecification</a>
      */
-    private static JSONObject getGatewayTokenizationSpecification(String gateway, String gatewayMerchantId, JSONObject argss) throws JSONException {
+    private static JSONObject getGatewayTokenizationSpecification(String gateway, String gatewayMerchantId, String par1, String par2, String par3) throws JSONException {
         switch (gateway) {
             case "stripe":
             return new JSONObject() {{
