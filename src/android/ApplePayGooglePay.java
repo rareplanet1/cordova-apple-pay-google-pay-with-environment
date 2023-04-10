@@ -144,17 +144,21 @@ public class ApplePayGooglePay extends CordovaPlugin {
             String par3 = "";
 
 
-            if(gateway.equals("stripe")){
-               par1 = getParam(argss, "version");
-               par2 = getParam(argss, "publishableKey");
-            }else if(gateway.equals("braintree")){
-              par1 = getParam(argss, "apiVersion");
-              par2 = getParam(argss, "sdkVersion");
-              par3 = getParam(argss, "clientKey");
-            }else if(gateway.equals("vantiv")){
-              par1 = getParam(argss, "merchantPayPageId");
-              par2 = getParam(argss, "merchantOrderId");
-              par3 = getParam(argss, "merchantTransactionId");
+            switch (gateway) {
+                case "stripe":
+                par1 = getParam(argss, "stripe:version");
+                par2 = getParam(argss, "stripe:publishableKey");
+                break;
+                case "braintree":
+                par1 = getParam(argss, "braintree:apiVersion");
+                par2 = getParam(argss, "braintree:sdkVersion");
+                par3 = getParam(argss, "braintree:clientKey");
+                break;
+                case "vantiv":
+                par1 = getParam(argss, "vantiv:merchantPayPageId");
+                par2 = getParam(argss, "vantiv:merchantOrderId");
+                par3 = getParam(argss, "vantiv:merchantTransactionId");
+                break;
             }
 
             JSONObject paymentDataRequest = getBaseRequest();
@@ -199,35 +203,36 @@ public class ApplePayGooglePay extends CordovaPlugin {
      * "https://developers.google.com/pay/api/android/reference/object#PaymentMethodTokenizationSpecification">PaymentMethodTokenizationSpecification</a>
      */
     private static JSONObject getGatewayTokenizationSpecification(String gateway, String gatewayMerchantId, JSONObject argss) throws JSONException {
-       if (gateway.equals("stripe")) {
+        switch (gateway) {
+            case "stripe":
             return new JSONObject() {{
                 put("type", "PAYMENT_GATEWAY");
                 put("parameters", new JSONObject() {{
-                    put("gateway", gateway);
-                    put("stripe:version", par1);
-                    put("stripe:publishableKey", par2);
+                put("gateway", gateway);
+                put("stripe:version", par1);
+                put("stripe:publishableKey", par2);
                 }});
             }};
-        } else if (gateway.equals("braintree")) {
+            case "braintree":
             return new JSONObject() {{
                 put("type", "PAYMENT_GATEWAY");
                 put("parameters", new JSONObject() {{
-                    put("gateway", gateway);
-                    put("braintree:apiVersion", par1);
-                    put("braintree:sdkVersion", par2);
-                    put("braintree:merchantId", gatewayMerchantId);
-                    put("braintree:clientKey", par3);
+                put("gateway", gateway);
+                put("braintree:apiVersion", par1);
+                put("braintree:sdkVersion", par2);
+                put("braintree:merchantId", gatewayMerchantId);
+                put("braintree:clientKey", par3);
                 }});
             }};
-        } else if (gateway.equals("vantiv")) {
+            case "vantiv":
             return new JSONObject() {{
                 put("type", "PAYMENT_GATEWAY");
                 put("parameters", new JSONObject() {{
-                    put("gateway", gateway);
-                    put("vantiv:merchantPayPageId", par1);
-                    put("vantiv:merchantOrderId", par2);
-                    put("vantiv:merchantTransactionId", par3);
-                    put("vantiv:merchantReportGroup", "*web");
+                put("gateway", gateway);
+                put("vantiv:merchantPayPageId", par1);
+                put("vantiv:merchantOrderId", par2);
+                put("vantiv:merchantTransactionId", par3);
+                put("vantiv:merchantReportGroup", "*web");
                 }});
             }};
         }
