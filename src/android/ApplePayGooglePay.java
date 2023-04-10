@@ -139,9 +139,31 @@ public class ApplePayGooglePay extends CordovaPlugin {
             String gpMerchantId = getParam(argss, "gpMerchantId");
             String gpMerchantName = getParam(argss, "gpMerchantName");
 
+            String par1 = "";
+            String par2 = "";
+            String par3 = "";
+
+
+            switch (gateway) {
+                case "stripe":
+                par1 = getParam(argss, "version");
+                par2 = getParam(argss, "publishableKey");
+                break;
+                case "braintree":
+                par1 = getParam(argss, "apiVersion");
+                par2 = getParam(argss, "sdkVersion");
+                par3 = getParam(argss, "clientKey");
+                break;
+                case "vantiv":
+                par1 = getParam(argss, "merchantPayPageId");
+                par2 = getParam(argss, "merchantOrderId");
+                par3 = getParam(argss, "merchantTransactionId");
+                break;
+            }
+
             JSONObject paymentDataRequest = getBaseRequest();
             paymentDataRequest.put(
-                    "allowedPaymentMethods", new JSONArray().put(getCardPaymentMethod(gateway, merchantId)));
+                    "allowedPaymentMethods", new JSONArray().put(getCardPaymentMethod(gateway, merchantId, par1, par2, par3)));
             paymentDataRequest.put("transactionInfo", getTransactionInfo(price, currencyCode, countryCode));
             paymentDataRequest.put("merchantInfo",
                     new JSONObject()
@@ -180,7 +202,40 @@ public class ApplePayGooglePay extends CordovaPlugin {
      * @see <a href=
      * "https://developers.google.com/pay/api/android/reference/object#PaymentMethodTokenizationSpecification">PaymentMethodTokenizationSpecification</a>
      */
-    private static JSONObject getGatewayTokenizationSpecification(String gateway, String gatewayMerchantId) throws JSONException {
+    private static JSONObject getGatewayTokenizationSpecification(String gateway, String gatewayMerchantId, String par1, String par2, String par3) throws JSONException {
+        switch (gateway) {
+            case "stripe":
+            return new JSONObject() {{
+                put("type", "PAYMENT_GATEWAY");
+                put("parameters", new JSONObject() {{
+                put("gateway", gateway);
+                put("stripe:version", par1);
+                put("stripe:publishableKey", par2);
+                }});
+            }};
+            case "braintree":
+            return new JSONObject() {{
+                put("type", "PAYMENT_GATEWAY");
+                put("parameters", new JSONObject() {{
+                put("gateway", gateway);
+                put("braintree:apiVersion", par1);
+                put("braintree:sdkVersion", par2);
+                put("braintree:merchantId", gatewayMerchantId);
+                put("braintree:clientKey", par3);
+                }});
+            }};
+            case "vantiv":
+            return new JSONObject() {{
+                put("type", "PAYMENT_GATEWAY");
+                put("parameters", new JSONObject() {{
+                put("gateway", gateway);
+                put("vantiv:merchantPayPageId", par1);
+                put("vantiv:merchantOrderId", par2);
+                put("vantiv:merchantTransactionId", par3);
+                put("vantiv:merchantReportGroup", "*web");
+                }});
+            }};
+        }
         return new JSONObject() {{
             put("type", "PAYMENT_GATEWAY");
             put("parameters", new JSONObject() {{
@@ -222,9 +277,9 @@ public class ApplePayGooglePay extends CordovaPlugin {
      * @see <a
      * href="https://developers.google.com/pay/api/android/reference/object#PaymentMethod">PaymentMethod</a>
      */
-    private JSONObject getCardPaymentMethod(String gateway, String gatewayMerchantId) throws JSONException {
+    private JSONObject getCardPaymentMethod(String gateway, String gatewayMerchantId, String par1, String par2, String par3) throws JSONException {
         JSONObject cardPaymentMethod = getBaseCardPaymentMethod();
-        cardPaymentMethod.put("tokenizationSpecification", getGatewayTokenizationSpecification(gateway, gatewayMerchantId));
+        cardPaymentMethod.put("tokenizationSpecification", getGatewayTokenizationSpecification(gateway, gatewayMerchantId, par1, par2, par3));
 
         return cardPaymentMethod;
     }

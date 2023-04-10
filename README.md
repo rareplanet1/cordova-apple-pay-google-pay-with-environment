@@ -115,4 +115,26 @@ request.gpMerchantName = 'Your Company Name'; // will be displayed in transactio
 request.gpMerchantId = 'XXXXXXXXXXXX'; // obtain it at https://pay.google.com/business/console
 ```
 
+For Stripe, Braintree and Vantiv, you will have to provide more extra parameters, all the parameter information can be found at [google pay for payments](https://developers.google.com/pay/api/android/reference/object#PaymentMethodTokenizationSpecification):
+
+**Stripe**
+```
+request.version = 'your stripe api version'
+request.publishableKey = 'your stripe payment processing publishable key'
+```
+
+**Braintree**
+```
+request.apiVersion = 'your braintree api version'
+request.sdkVersion = 'your braintree sdk version'
+request.clientKey = 'your btraintree client key'
+```
+
+**Vantiv**
+```
+request.merchantPayPageId = 'your vantiv page id'
+request.merchantOrderId = 'order id'
+request.merchantTransactionId = 'transactionID'
+```
+
 Also, on Android checking payment availability calling `canMakePayments()` always returns false even if user has a valid card attached to GooglePay.
