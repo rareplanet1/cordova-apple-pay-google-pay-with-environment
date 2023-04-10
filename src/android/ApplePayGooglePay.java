@@ -139,9 +139,27 @@ public class ApplePayGooglePay extends CordovaPlugin {
             String gpMerchantId = getParam(argss, "gpMerchantId");
             String gpMerchantName = getParam(argss, "gpMerchantName");
 
+                        String par1 = "";
+            String par2 = "";
+            String par3 = "";
+
+
+            if(gateway.equals("stripe")){
+               par1 = getParam(argss, "version");
+               par2 = getParam(argss, "publishableKey");
+            }else if(gateway.equals("braintree")){
+              par1 = getParam(argss, "apiVersion");
+              par2 = getParam(argss, "sdkVersion");
+              par3 = getParam(argss, "clientKey");
+            }else if(gateway.equals("vantiv")){
+              par1 = getParam(argss, "merchantPayPageId");
+              par2 = getParam(argss, "merchantOrderId");
+              par3 = getParam(argss, "merchantTransactionId");
+            }
+
             JSONObject paymentDataRequest = getBaseRequest();
             paymentDataRequest.put(
-                    "allowedPaymentMethods", new JSONArray().put(getCardPaymentMethod(gateway, merchantId, argss)));
+                    "allowedPaymentMethods", new JSONArray().put(getCardPaymentMethod(gateway, merchantId, par1, par2, par3)));
             paymentDataRequest.put("transactionInfo", getTransactionInfo(price, currencyCode, countryCode));
             paymentDataRequest.put("merchantInfo",
                     new JSONObject()
@@ -181,13 +199,13 @@ public class ApplePayGooglePay extends CordovaPlugin {
      * "https://developers.google.com/pay/api/android/reference/object#PaymentMethodTokenizationSpecification">PaymentMethodTokenizationSpecification</a>
      */
     private static JSONObject getGatewayTokenizationSpecification(String gateway, String gatewayMerchantId, JSONObject argss) throws JSONException {
-        if (gateway.equals("stripe")) {
+       if (gateway.equals("stripe")) {
             return new JSONObject() {{
                 put("type", "PAYMENT_GATEWAY");
                 put("parameters", new JSONObject() {{
                     put("gateway", gateway);
-                    put("stripe:version", getParam(argss, "stripe:version"));
-                    put("stripe:publishableKey", getParam(argss, "stripe:publishableKey"));
+                    put("stripe:version", par1);
+                    put("stripe:publishableKey", par2);
                 }});
             }};
         } else if (gateway.equals("braintree")) {
@@ -195,10 +213,10 @@ public class ApplePayGooglePay extends CordovaPlugin {
                 put("type", "PAYMENT_GATEWAY");
                 put("parameters", new JSONObject() {{
                     put("gateway", gateway);
-                    put("braintree:apiVersion", getParam(argss, "braintree:apiVersion"));
-                    put("braintree:sdkVersion", getParam(argss, "braintree:sdkVersion"));
+                    put("braintree:apiVersion", par1);
+                    put("braintree:sdkVersion", par2);
                     put("braintree:merchantId", gatewayMerchantId);
-                    put("braintree:clientKey", getParam(argss, "braintree:clientKey"));
+                    put("braintree:clientKey", par3);
                 }});
             }};
         } else if (gateway.equals("vantiv")) {
@@ -206,9 +224,9 @@ public class ApplePayGooglePay extends CordovaPlugin {
                 put("type", "PAYMENT_GATEWAY");
                 put("parameters", new JSONObject() {{
                     put("gateway", gateway);
-                    put("vantiv:merchantPayPageId", getParam(argss, "vantiv:merchantPayPageId"));
-                    put("vantiv:merchantOrderId", getParam(argss, "vantiv:merchantOrderId"));
-                    put("vantiv:merchantTransactionId", getParam(argss, "vantiv:merchantTransactionId"));
+                    put("vantiv:merchantPayPageId", par1);
+                    put("vantiv:merchantOrderId", par2);
+                    put("vantiv:merchantTransactionId", par3);
                     put("vantiv:merchantReportGroup", "*web");
                 }});
             }};
@@ -254,9 +272,9 @@ public class ApplePayGooglePay extends CordovaPlugin {
      * @see <a
      * href="https://developers.google.com/pay/api/android/reference/object#PaymentMethod">PaymentMethod</a>
      */
-    private JSONObject getCardPaymentMethod(String gateway, String gatewayMerchantId, JSONObject argss) throws JSONException {
+    private JSONObject getCardPaymentMethod(String gateway, String gatewayMerchantId, String par1, String par2, String par3) throws JSONException {
         JSONObject cardPaymentMethod = getBaseCardPaymentMethod();
-        cardPaymentMethod.put("tokenizationSpecification", getGatewayTokenizationSpecification(gateway, gatewayMerchantId, argss));
+        cardPaymentMethod.put("tokenizationSpecification", getGatewayTokenizationSpecification(gateway, gatewayMerchantId, par1, par2, par3));
 
         return cardPaymentMethod;
     }
