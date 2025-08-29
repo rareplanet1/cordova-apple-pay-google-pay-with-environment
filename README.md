@@ -2,10 +2,8 @@
 
 > This is a fork of https://www.npmjs.com/package/cordova-plugin-apple-pay-google-pay with the addition of an Android environment preference to allow for testing and producing screenshots of your buyflow for [submission to Google](https://developers.google.com/pay/api/android/guides/brand-guidelines#put-it-all-together).
 
-This plugin is built as unified method for obtaining payment tokens to forward it to your [supported payment processor](https://developers.google.com/pay/api#participating-processors) (eg Fat Zebra,
+This plugin is built as unified method for obtaining payment tokens to forward it to your [supported payment processor](https://developers.google.com/pay/api#participating-processors) (e.g. Pin Payments, Fat Zebra,
 Stripe, etc).
-
-Plugin supports iOS 11-14. Tested properly with cordova 10, iOS 14.6 and Android 11.
 
 ## Installation
 
@@ -16,7 +14,7 @@ cordova plugin add cordova-plugin-apple-pay-google-pay-with-environment
 or for Cordova build service, e.g. [VoltBuilder](https://volt.build/), add the following to config.xml:
 
 ```
-<plugin name="cordova-plugin-apple-pay-google-pay-with-environment" source="npm" spec="1.1.5" />
+<plugin name="cordova-plugin-apple-pay-google-pay-with-environment" source="npm" spec="1.1.7" />
 ```
 
 For Android, register and fill all required forms at https://pay.google.com/business/console. Add the following to
@@ -42,7 +40,6 @@ config.xml:
 
 ```
 <platform name="ios">
-
   <config-file target="*-Debug.plist" parent="com.apple.developer.in-app-payments">
     <array>
       <string>developer merchant ID here</string>
@@ -116,3 +113,4 @@ request.gpMerchantId = 'XXXXXXXXXXXX'; // obtain it at https://pay.google.com/bu
 ```
 
 Also, on Android checking payment availability calling `canMakePayments()` always returns false even if user has a valid card attached to GooglePay.
+
